@@ -1,5 +1,5 @@
 package Graph;
-
+import java.util.*;
 public class graph_client {
 
 	public static void main(String[] args) {
@@ -26,6 +26,16 @@ public class graph_client {
 		
 		graph.display();
 		
+		System.out.println(graph.numEdge());
+		System.out.println(graph.numvtex());
+		
+		
+		System.out.println( graph.haspath("A", "F", new HashMap() ));
+		System.out.println(graph.bsf("A", "F"));
+		System.out.println(graph.dsf("A", "C"));
+		
+		graph.bst();
+		graph.dst();
 
 	}
 
