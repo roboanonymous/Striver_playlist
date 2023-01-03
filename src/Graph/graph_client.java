@@ -16,13 +16,13 @@ public class graph_client {
 		graph.addVertex("G");
 		
 		graph.addedge("A", "B", 2);
-		graph.addedge("A", "D", 3);
-		graph.addedge("B", "C", 1);
-		graph.addedge("C", "D", 8);
-		graph.addedge("D", "E", 10);
-		graph.addedge("E", "F", 45);
+		graph.addedge("A", "D", 6);
+		graph.addedge("B", "C", 3);
+		graph.addedge("C", "D", 1);
+		graph.addedge("D", "E", 8);
+		graph.addedge("E", "F", 5);
 		graph.addedge("E", "G", 7);
-		graph.addedge("F", "G", 8);
+		graph.addedge("F", "G", 4);
 		
 		graph.display();
 		
@@ -36,7 +36,12 @@ public class graph_client {
 		
 		graph.bst();
 		graph.dst();
-
+		
+	//	graph.removeedge("D", "E");
+		System.out.println(graph.getCC());
+		graph.prims().display();
+		
+		
 	}
 
 }

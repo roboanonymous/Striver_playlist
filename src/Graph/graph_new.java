@@ -509,6 +509,138 @@ public class graph_new {
 		return !iscyclic() && isconnected ();
 	}
 	
+	public ArrayList<ArrayList<String>> getCC ()
+	{
+		HashMap <String , Boolean> processed = new HashMap<>();
+		ArrayList <String> keys = new ArrayList<>(vtces.keySet());	
+		LinkedList <pair> queue = new LinkedList<>();
+		ArrayList<ArrayList<String>> ans = new ArrayList<>();
+		
+		for(String key : keys)
+		{
+			if(processed.containsKey(key))
+			{
+				continue;
+			}
+			ArrayList<String> subans = new ArrayList<>();
+			// Create a new pair
+			pair sp = new pair();
+			sp.vname = key;
+			sp.psf = key;
+			
+			
+			queue.addLast(sp);
+			
+			while(!queue.isEmpty())
+			{
+				pair rp = queue.removeFirst();
+				
+				if(processed.containsKey(rp.vname))
+				{
+					continue;
+				}
+				
+				
+
+				processed.put(rp.vname, true);
+				
+				subans.add(rp.vname);
+				
+				vertex rpvtx = vtces.get(rp.vname);
+				ArrayList <String> nbrs = new ArrayList<>(rpvtx.nbrs.keySet());
+				
+				for( String nbr: nbrs)
+				{
+					if(!processed.containsKey(nbr))
+					{
+						pair np = new pair();
+						np.vname = nbr;
+						np.psf = rp.psf+ nbr;
+						
+						queue.addLast(np);
+					}
+				}
+				
+			}
+			ans.add(subans);
+				
+		}
+		
+		return ans;
+		
+	}
+
+	private class primspair implements Comparable <primspair>
+	{
+		String vname;
+		String acqvname;
+		int cost;
+		
+		@Override
+		public int compareTo(primspair o) {
+			return o.cost - this.cost;
+		}
+	}
 	
+	public graph_new prims ()
+	{
+		graph_new mst = new graph_new();
+		HashMap <String , primspair> map = new HashMap<>();
+		HeapGeneric <primspair> heap = new HeapGeneric<>();
+		
+		for (String keys : vtces.keySet()) {
+
+			primspair np = new primspair();
+			np.vname = keys;
+			np.acqvname = null;
+			np.cost = Integer.MAX_VALUE;
+
+			// also put the pair in heap and processed
+			heap.insert(np);
+			map.put(keys, np);
+		}
+		
+		while(!heap.isEmpty())
+		{
+			primspair rp = heap.remove();
+			map.remove(rp.vname);
+			
+			if(rp.acqvname == null)
+			{
+				mst.addVertex(rp.vname);
+			}
+			else
+			{
+				mst.addVertex(rp.vname);
+				mst.addedge(rp.vname, rp.acqvname, rp.cost);
+			}
+			
+		
+			for(String nbr : vtces.get(rp.vname).nbrs.keySet())
+			{
+				
+				if(map.containsKey(nbr))
+				{
+					int oc = map.get(nbr).cost;
+					int nc = vtces.get(rp.vname).nbrs.get(nbr);
+					
+					
+					if (nc < oc) {
+						
+						map.get(nbr).cost = nc;
+						map.get(nbr).acqvname = rp.vname;
+
+						// update the priority in heap
+						heap.updatePriority(map.get(nbr));
+
+					}
+					
+				}
+			}
+			
+		}
+		
+		return mst;
+	}
 
 }
