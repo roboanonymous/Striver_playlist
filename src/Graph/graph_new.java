@@ -372,4 +372,143 @@ public class graph_new {
 		
 	}
 
+	public boolean iscyclic ()
+	{
+		HashMap <String , Boolean> processed = new HashMap<>();
+		
+		ArrayList <String> keys = new ArrayList<>(vtces.keySet());
+		
+		LinkedList <pair> queue = new LinkedList<>();
+		
+		for(String key : keys)
+		{
+			if(processed.containsKey(key))
+			{
+				continue;
+			}
+			
+			// Create a new pair
+			pair sp = new pair();
+			sp.vname = key;
+			sp.psf = key;
+			
+			
+			queue.addLast(sp);
+			
+			while(!queue.isEmpty())
+			{
+				pair rp = queue.removeFirst();
+				
+				if(processed.containsKey(rp.vname))
+				{
+					return true;
+				}
+				
+				processed.put(rp.vname, true);
+				
+				vertex rpvtx = vtces.get(rp.vname);
+				ArrayList <String> nbrs = new ArrayList<>(rpvtx.nbrs.keySet());
+				
+				for( String nbr: nbrs)
+				{
+					if(!processed.containsKey(nbr))
+					{
+						pair np = new pair();
+						np.vname = nbr;
+						np.psf = rp.psf+ nbr;
+						
+						queue.addLast(np);
+					}
+				}
+				
+			}
+			
+			
+			
+		}
+		
+		return false;
+		
+	}
+
+	public boolean isconnected ()
+	{
+		HashMap <String , Boolean> processed = new HashMap<>();
+		
+		ArrayList <String> keys = new ArrayList<>(vtces.keySet());
+		
+		LinkedList <pair> queue = new LinkedList<>();
+		
+		int flag = 0;
+		
+		for(String key : keys)
+		{
+			if(processed.containsKey(key))
+			{
+				continue;
+			}
+			
+			flag++;
+			// Create a new pair
+			pair sp = new pair();
+			sp.vname = key;
+			sp.psf = key;
+			
+			
+			queue.addLast(sp);
+			
+			while(!queue.isEmpty())
+			{
+				pair rp = queue.removeFirst();
+				
+				if(processed.containsKey(rp.vname))
+				{
+					continue;
+				}
+				
+				processed.put(rp.vname, true);
+				
+				System.out.println(rp.vname + " "+ rp.psf);
+				
+				vertex rpvtx = vtces.get(rp.vname);
+				ArrayList <String> nbrs = new ArrayList<>(rpvtx.nbrs.keySet());
+				
+				for( String nbr: nbrs)
+				{
+					if(!processed.containsKey(nbr))
+					{
+						pair np = new pair();
+						np.vname = nbr;
+						np.psf = rp.psf+ nbr;
+						
+						queue.addLast(np);
+					}
+				}
+				
+			}
+			
+			
+			
+		}
+		
+		if (flag > 1)
+		{
+			return false;
+		}
+		
+		else
+		{
+			return true;
+		}
+		
+		
+	}
+
+	public boolean istree ()
+	{
+		return !iscyclic() && isconnected ();
+	}
+	
+	
+
 }
