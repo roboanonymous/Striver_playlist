@@ -643,4 +643,79 @@ public class graph_new {
 		return mst;
 	}
 
+	private class DijkstraPair implements Comparable<DijkstraPair> {
+
+		String vname;
+		String psf;
+		int cost;
+
+		@Override
+		public int compareTo(DijkstraPair o) {
+			return o.cost - this.cost;
+		}
+		
+	}
+
+	public void dijkstra(String src) {
+
+		HeapGeneric<DijkstraPair> heap = new HeapGeneric<>();
+		HashMap<String, DijkstraPair> processed = new HashMap<>();
+
+		// make a pair of every vertex and put in heap
+		for (String keys : vtces.keySet()) {
+
+			DijkstraPair np = new DijkstraPair();
+			np.vname = keys;
+			np.psf = "";
+			np.cost = Integer.MAX_VALUE;
+
+			if (keys.equals(src)) {
+				np.psf = keys;
+				np.cost = 0;
+			}
+			// also put the pair in heap and processed
+			heap.insert(np);
+			processed.put(keys, np);
+
+		}
+
+		// work till heap is not empty
+		while (!heap.isEmpty()) {
+
+			// remove the pair from heap and also remove from processed
+			DijkstraPair rp = heap.remove();
+			processed.remove(rp.vname);
+
+			// print
+			System.out.println(rp.vname + " via " + rp.psf);
+
+			// nbrs
+			for (String nbr : vtces.get(rp.vname).nbrs.keySet()) {
+
+				// update only those nbrs which are present in heap
+				if (processed.containsKey(nbr)) {
+
+					// find the oc and nc
+					int oc = processed.get(nbr).cost;
+					int nc = rp.cost + vtces.get(rp.vname).nbrs.get(nbr);
+
+					// update only when nc < oc
+					if (nc < oc) {
+
+						// update the pair of heap
+						processed.get(nbr).cost = nc;
+						processed.get(nbr).psf = rp.psf + nbr;
+
+						// update the priority in heap
+						heap.updatePriority(processed.get(nbr));
+
+					}
+				}
+
+			}
+
+		}
+
+	}
+
 }
