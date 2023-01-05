@@ -48,6 +48,23 @@ public class Fibbonachi {
 		
 		return strg[n];
 	}
+	
+	public static int FibBUSE(int n) {
+
+		int[] strg = new int[2];
+
+		strg[0] = 0;
+		strg[1] = 1;
+
+		for (int i = 1; i <= n - 1; i++) {
+			int temp = strg[0] + strg[1];
+			strg[0] = strg[1];
+			strg[1] = temp;
+		}
+
+		return strg[1];
+
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		int n =45;
